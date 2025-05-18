@@ -729,6 +729,14 @@ func (s *Server) HandleWS(w http.ResponseWriter, r *http.Request) {
 
 	log.Info("received WS connection", "req_id", GetReqID(ctx))
 
+	log.Debug(
+		"received WS connection",
+		"req_id", GetReqID(ctx),
+		"user_agent", r.Header.Get("User-Agent"),
+		"origin", r.Header.Get("Origin"),
+		"remote_ip", stripXFF(GetXForwardedFor(ctx)),
+	)
+
 	clientConn, err := s.upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Error("error upgrading client conn", "auth", GetAuthCtx(ctx), "req_id", GetReqID(ctx), "err", err)
